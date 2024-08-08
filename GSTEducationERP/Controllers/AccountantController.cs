@@ -1,6 +1,7 @@
 ﻿using GSTEducationERPLibrary.Account;
 using GSTEducationERPLibrary.Accountant;
 using GSTEducationERPLibrary.Trainer;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,7 +23,11 @@ namespace GSTEducationERP.Controllers
             public string Name { get; set; }
             public string Url { get; set; }
         }
+<<<<<<< HEAD
+        #region // Vouvcher
+=======
        
+>>>>>>> 4909f8885d1c69a47f3544ca2beb564852974bc3
         // GET: Accountant
         public ActionResult AccountantDashboardAsyncSGS()
         {
@@ -389,6 +394,7 @@ namespace GSTEducationERP.Controllers
             }
 
         }
+        #endregion 
         #region //Vishals purchase modules starts here
         //======================================================Vishal's Purchase Modules starts here===================================================================================
         #region//main view code for purchase by vishal pardeshi
@@ -1133,7 +1139,394 @@ namespace GSTEducationERP.Controllers
             }
         }
         //------------------------------------Vishal's Purchase Modules ends here------------------------------------------------------------
+<<<<<<< HEAD
+        #endregion
+
+
+        #region -- Cash and Bank Controller -- Ajay Narkhedkar
+        /// <summary>
+        /// Show Bank Accounts according to Branch
+        /// </summary>
+        /// <returns>List of bank Accounts</returns>
+        /// 
+        [HttpGet]
+        public async Task<ActionResult> BankAccountListAsyncAN(Accountant obj1)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                obj1.BranchCode = Session["BranchCode"].ToString();
+                DataSet ds = await objbal.BankAccountsListAN(obj1);
+                List<Accountant> lstBanklist = new List<Accountant>();
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                {
+                    Accountant obj = new Accountant();
+                    obj.BankId = Convert.ToInt32(ds.Tables[0].Rows[i]["BankId"].ToString());
+                    obj.BankName = ds.Tables[0].Rows[i]["BankName"].ToString();
+                    obj.BankAccountNumber = Convert.ToInt64(ds.Tables[0].Rows[i]["AccountNumber"].ToString());
+                    obj.AccountHolderName = ds.Tables[0].Rows[i]["AccountHolderName"].ToString();
+                    obj.AccountType = ds.Tables[0].Rows[i]["AccountType"].ToString();
+                    obj.BankBrach = ds.Tables[0].Rows[i]["Branch"].ToString();
+                    obj.BankAmount = float.Parse(ds.Tables[0].Rows[i]["FinalBalance"].ToString());
+                    obj.TransactionCount = Convert.ToInt32(ds.Tables[0].Rows[i]["TotalTransactions"].ToString());
+                    lstBanklist.Add(obj);
+                }
+                List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>
+                        {
+                            new BreadcrumbItem { Name = "Dashboard", Url = "AccountantDashboardAsyncSGS" },
+                            new BreadcrumbItem { Name = "Bank Account List", Url = "BankAccountListAsyncAN" },
+                        };
+                ViewBag.Breadcrumbs = breadcrumbs;
+                objac.lstBankAccounts = lstBanklist;
+                return View(objac);
+            }
+        }
+
+        /// <summary>
+        /// Add New Bank Account GET Method
+        /// </summary>
+        /// <returns>Add bank</returns>
+        [HttpGet]
+        public async Task<ActionResult> AddNewBankAccountAsyncAN()
+        {
+
+            if (Session["StaffCode"] == null)
+            {
+                return await Task.Run(() => RedirectToAction("Login", "Account"));
+            }
+            else
+            {
+                try
+                {
+                    objac.BranchCode = Session["BranchCode"].ToString();
+                    objac.StaffCode = Session["StaffCode"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    throw (ex);
+                }
+                return await Task.Run(() => PartialView());
+            }
+        }
+
+        /// <summary>
+        /// Save Bank Account Details
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>Save the New Bank Account Details to DB</returns>
+        [HttpPost]
+        public async Task<ActionResult> AddNewBankAccountAsyncAN(Accountant obj)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+
+                obj.StaffCode = Session["StaffCode"].ToString();
+                await objbal.AddNewBankAccountAsyncAN(obj);
+                return RedirectToAction("BankAccountListAsyncAN");
+            }
+        } 
+
+        /// <summary>
+        /// Show the Transactions of Perticular Bank
+        /// </summary>
+        /// <param name="obj1"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult> BankAccountTransactionDetailsAsyncAN(int BankId)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                Accountant objDetails = new Accountant();
+                objDetails.BankId = BankId;
+                objDetails.BranchCode = Session["BranchCode"].ToString();
+                SqlDataReader dr = await objbal.BankAccountTransactionDetailsAsync(objDetails);
+
+                if (dr.Read())
+                {
+                    objDetails.BankId = Convert.ToInt32(dr["BankId"].ToString());
+                    objDetails.BankName = dr["BankName"].ToString();
+                    objDetails.BankAccountNumber = Convert.ToInt64(dr["AccountNumber"].ToString());
+                    objDetails.AccountHolderName = dr["AccountHolderName"].ToString();
+                    objDetails.AccountType = dr["AccountType"].ToString();
+                    objDetails.BankBrach = dr["Branch"].ToString();
+                    objDetails.BankAccountOpeningDate = Convert.ToDateTime(dr["AccountOpeningDate"].ToString());
+                    objDetails.Date = Convert.ToDateTime(dr["Date"].ToString());
+                    objDetails.IFSCCode = dr["IFSCCode"].ToString();
+                    objDetails.MICRCode = dr["MICRCode"].ToString();
+                    objDetails.BankAmount = float.Parse(dr["Balance"].ToString());
+                    objDetails.BankAccountOpeningBalance = float.Parse(dr["OpeningBalance"].ToString());
+                    objDetails.BankAccountMinimumBalance = float.Parse(dr["MinimumBalance"].ToString());
+                }
+                dr.Close();
+                return PartialView("BankAccountTransactionDetailsAsyncAN", objDetails);
+            }
+        }
+
+
+        /// <summary>
+        /// Bank Account Statement (Transactions)
+        /// </summary>
+        /// <param name="BankId"></param>
+        /// <returns>Statement</returns>
+        [HttpGet]
+        public async Task<ActionResult> BankAccountStatementAsyncAN(int BankId)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                Accountant objDetails = new Accountant();
+                objDetails.BankId = BankId;
+                objDetails.BranchCode = Session["BranchCode"].ToString();
+                SqlDataReader dr = await objbal.BankAccountTransactionDetailsAsync(objDetails);
+
+                if (dr.Read())
+                {
+                    objDetails.BankName = dr["BankName"].ToString();
+                    objDetails.BankAccountNumber = Convert.ToInt64(dr["AccountNumber"].ToString());
+                    objDetails.AccountHolderName = dr["AccountHolderName"].ToString();
+                    objDetails.BankAmount = float.Parse(dr["Balance"].ToString());
+                }
+                dr.Close();
+                DataSet ds = await objbal.BankTransactionHistory(objDetails);
+                List<Accountant> lstBankTrans = new List<Accountant>();
+                for (int i = 0; i < ds.Tables[0].Rows.Count; i++)
+                {
+                    Accountant obj = new Accountant();
+                    obj.Date = Convert.ToDateTime(ds.Tables[0].Rows[i]["TransactionDate"].ToString());
+                    obj.TransactionCode = ds.Tables[0].Rows[i]["TransactionCode"].ToString();
+                    obj.Amount = float.Parse(ds.Tables[0].Rows[i]["Amount"].ToString());
+                    obj.Description = ds.Tables[0].Rows[i]["Description"].ToString();
+                    obj.ReceiverBankAccountHolderName = ds.Tables[0].Rows[i]["BankAccountHolderName"].ToString();
+                    obj.Status = ds.Tables[0].Rows[i]["Status"].ToString();
+                    obj.TransactionId = ds.Tables[0].Rows[i]["TransactionId"].ToString();
+                    obj.TransactionType = ds.Tables[0].Rows[i]["TransactionType"].ToString();
+                    obj.Balance = float.Parse(ds.Tables[0].Rows[i]["RunningBalance"].ToString());
+                    lstBankTrans.Add(obj);
+                }
+                List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>
+                        {
+                            new BreadcrumbItem { Name = "Dashboard", Url = "AccountantDashboardAsyncSGS" },
+                            new BreadcrumbItem { Name = "Bank Account List", Url = "BankAccountListAsyncAN" },
+                            new BreadcrumbItem { Name = "Bank Account Statement", Url = "BankAccountStatementAsyncAN" },
+                        };
+                ViewBag.Breadcrumbs = breadcrumbs;
+                objDetails.lstBankTransactions = lstBankTrans;
+                //  return View(ObjAccountant);
+
+                return View("BankAccountStatementAsyncAN", objDetails);
+            }
+        }
+
+
+        /// <summary>
+        /// Show Cash Transactions
+        /// </summary>
+        /// <returns>List of Cash Transactions</returns>
+        public async Task<ActionResult> CashTransactionsAsyncAN()
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return await Task.Run(() => RedirectToAction("Login", "Account"));
+            }
+            else
+            {
+                List<BreadcrumbItem> breadcrumbs = new List<BreadcrumbItem>
+              {
+                  new BreadcrumbItem { Name = "Dashboard", Url = "AccountantDashboardAsyncSGS" },
+                  new BreadcrumbItem { Name = "Cash Transactions", Url = "CashTransactionsAsyncAN" },
+              };
+                ViewBag.Breadcrumbs = breadcrumbs;
+                return await Task.Run(() => View());
+            }
+        }
+
+        /// <summary>
+        /// Show the list of Cash Recieved Form Students or Any Other ways
+        /// </summary>
+        /// <returns>Cash Reciept List</returns>
+        [HttpGet]
+        public async Task<ActionResult> CashReceiptListAsyncAN()
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                objac.BranchCode = Session["BranchCode"].ToString();
+                DataSet ds = await objbal.CashReceiptListAsyncAN(objac);
+                List<Accountant> lstCashrcvd = new List<Accountant>();
+                if (ds != null && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        Accountant objCash = new Accountant();
+                        objCash.FeeCollectionCode = row["FeesCollectioncode"].ToString();
+                        objCash.Date = Convert.ToDateTime(row["TransactionDate"].ToString());
+                        objCash.StudentName = row["FullName"].ToString();
+                        objCash.Amount = float.Parse(row["TransactionAmount"].ToString());
+                        lstCashrcvd.Add(objCash);
+                    }
+                }
+                objac.lstCashList = lstCashrcvd;
+                ViewBag.RegularExpense = ds;
+
+                return PartialView(objac);
+            }
+        }
+
+        /// <summary>
+        /// List of Expense through Cash
+        /// </summary>
+        /// <returns>Expense Cash List</returns>
+        public async Task<ActionResult> CashExpenceListAsyncAN()
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                objac.BranchCode = Session["BranchCode"].ToString();
+                DataSet ds = await objbal.CashExpenceListAsyncAN(objac);
+                List<Accountant> lstCashExp = new List<Accountant>();
+                if (ds != null && ds.Tables[0].Rows.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        Accountant objCash = new Accountant();
+                        objCash.TransactionCode = row["TransactionCode"].ToString();
+                        objCash.Date = Convert.ToDateTime(row["TransactionDate"].ToString());
+                        objCash.VendorName = row["VendorName"].ToString();
+                        objCash.Amount = float.Parse(row["TransactionAmount"].ToString());
+                        lstCashExp.Add(objCash);
+                    }
+                }
+                objac.lstCashList = lstCashExp;
+                ViewBag.RegularExpense = ds;
+
+                return PartialView(objac);
+            }
+        }
+
+        /// <summary>
+        /// Cash Expense Transaction View
+        /// </summary>
+        /// <param name="TransactionCode"></param>
+        /// <returns></returns>
+        public async Task<ActionResult> CashExpenseViewAN(string TransactionCode)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                Accountant objView = new Accountant();
+                objView.TransactionCode = TransactionCode;
+                objView.BranchCode = Session["BranchCode"].ToString();
+                SqlDataReader dr = await objbal.CashDeductionTransferViewAN(objView);
+
+                if (dr.Read())
+                {
+                    objView.VendorName = dr["VendorName"].ToString();
+                    objView.TransactionCode = dr["TransactionCode"].ToString();
+                    objView.Date = Convert.ToDateTime(dr["TransactionDate"].ToString());
+                    objView.Amount = float.Parse(dr["TransactionAmount"].ToString());
+                    objView.Description = dr["Description"].ToString();
+                    objView.Status = dr["Status"].ToString();
+                    objView.ExpenseCategory = dr["ExpenseCategory"].ToString();
+                }
+
+                dr.Close();
+
+                return PartialView("CashExpenseViewAN", objView);
+            }
+        }
+
+        /// <summary>
+        /// Cash Reciept Transaction View Details
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <returns>View</returns>
+        public async Task<ActionResult> CashRecievedViewAN(string TransactionId)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            else
+            {
+                Accountant objView = new Accountant();
+                objView.TransactionCode = TransactionId;
+                SqlDataReader dr = await objbal.CashRecievedTransferViewAN(objView);
+
+                if (dr.Read())
+                {
+                    objView.PaymentMode = dr["PaymentMode"].ToString();
+                    objView.TransactionCode = dr["TransactionCode"].ToString();
+                    objView.Date = Convert.ToDateTime(dr["TransactionDate"].ToString());
+                    objView.Amount = float.Parse(dr["TransactionAmount"].ToString());
+                    objView.Description = dr["Description"].ToString();
+                    objView.Status = dr["Status"].ToString();
+                    objView.StudentName = dr["FullName"].ToString();
+                    objView.EmailId = dr["EmailId"].ToString();
+                }
+
+                dr.Close();
+
+                return PartialView("CashRecievedViewAN", objView);
+                // return Json(objView, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        /// <summary>
+        /// Delete Bank Account if if they don't have any Transactions Yet
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> Delete Bank Account</returns>
+        [HttpPost]
+        public async Task<ActionResult> DeleteBankAccountAN(int id)
+        {
+            if (Session["StaffCode"] == null)
+            {
+                return await Task.Run(() => RedirectToAction("Login", "Account"));
+            }
+            else
+            {
+                try
+                {
+
+                    objac.BankId = id;
+                    await objbal.DeleteBankAccountAN(objac);
+                    return await Task.Run(() => Json(new { success = true, message = "Bank account deleted successfully" }, JsonRequestBehavior.AllowGet));
+                }
+                catch (Exception ex)
+                {
+                    throw (ex);
+                }
+
+            }
+        }
+        #endregion
+=======
        
         #endregion 
+>>>>>>> 4909f8885d1c69a47f3544ca2beb564852974bc3
     }
 }

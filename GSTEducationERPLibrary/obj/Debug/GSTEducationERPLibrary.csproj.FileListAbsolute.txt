@@ -69,3 +69,12 @@ D:\Vishal's Project\GSTEduERP2\EmpowerERP\GSTEducationERPLibrary\obj\Debug\GSTEd
 D:\Vishal's Project\GSTEduERP2\EmpowerERP\GSTEducationERPLibrary\obj\Debug\GSTEduca.4B0C6BB9.Up2Date
 D:\Vishal's Project\GSTEduERP2\EmpowerERP\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.dll
 D:\Vishal's Project\GSTEduERP2\EmpowerERP\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.pdb
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\bin\Debug\GSTEducationERPLibrary.dll
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\bin\Debug\GSTEducationERPLibrary.pdb
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\bin\Debug\Helper.dll
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\bin\Debug\Helper.pdb
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.csproj.AssemblyReference.cache
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.csproj.CoreCompileInputs.cache
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\obj\Debug\GSTEduca.4B0C6BB9.Up2Date
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.dll
+E:\EducationERP\EmpowerERPIII\GSTEducationERPLibrary\obj\Debug\GSTEducationERPLibrary.pdb

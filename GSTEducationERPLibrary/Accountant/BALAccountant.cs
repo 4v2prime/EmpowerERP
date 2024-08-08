@@ -456,5 +456,130 @@ namespace GSTEducationERPLibrary.Accountant
         }
        
         #endregion //vishals region ends here
+
+
+
+        #region  // Cash and bank - Ajay Narkhedkar
+
+        /// <summary>
+		/// Show Total Bank Accounts for that Perticular Branch
+		/// </summary>
+		/// <returns>List of Bank Accounts with Details</returns>
+		/// 
+		public async Task<DataSet> BankAccountsListAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "BankAccountsListAN");
+            Param.Add("@BranchCode", obj.BranchCode);
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+        /// <summary>
+        /// Add New Bank Account to the System
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>Add New Bank Account</returns>
+        public async Task AddNewBankAccountAsyncAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "AddNewBankAccountAN");
+            Param.Add("@BankName", obj.BankName);
+            Param.Add("@BankBranch", obj.BankBrach);
+            Param.Add("@AccountHolderName", obj.AccountHolderName);
+            Param.Add("@AccountNumber", obj.BankAccountNumber.ToString());
+            Param.Add("@IFSCCode", obj.IFSCCode);
+            Param.Add("@MICRCode", obj.MICRCode);
+            Param.Add("@AccountType", obj.AccountType);
+            Param.Add("@openingDate", obj.BankAccountOpeningDate.ToString("yyyy-MM-dd"));
+            Param.Add("@OpeningBalance", obj.BankAccountOpeningBalance.ToString());
+            Param.Add("@MinimumBalance", obj.BankAccountMinimumBalance.ToString());
+            Param.Add("@StaffCode", obj.StaffCode);
+            await DBHelper.ExecuteStoreProcedure("GSTAccountant", Param);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns>Showing the bank Details</returns>
+        public async Task<SqlDataReader> BankAccountTransactionDetailsAsync(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "BankAccountTransactionDetailsAsyncAN");
+            Param.Add("@BranchCode", obj.BranchCode);
+            Param.Add("@BankId", obj.BankId.ToString());
+            SqlDataReader dr = await DBHelper.ExecuteStoreProcedureReturnDataReader("GSTAccountant", Param);
+            return dr;
+        }
+
+        public async Task<DataSet> CashReceiptListAsyncAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "CashReceiptListAsyncAN");
+            Param.Add("@BranchCode", obj.BranchCode);
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+        public async Task<DataSet> CashExpenceListAsyncAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "CashExpenceListAsyncAN");
+            Param.Add("@BranchCode", obj.BranchCode);
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+        public async Task<DataSet> FilterDateCashTransactions(DateTime startDate, DateTime endDate, object BranchCode)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "FilterDateCashTransactions");
+            Param.Add("@FromDate", startDate.ToString());
+            Param.Add("@ToDate", endDate.ToString());
+            Param.Add("@BranchCode", BranchCode.ToString());
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+
+        public async Task<SqlDataReader> CashRecievedTransferViewAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "CashRecievedTransferViewAN");
+            Param.Add("@TransactionCode", obj.TransactionCode);
+            SqlDataReader dr = await DBHelper.ExecuteStoreProcedureReturnDataReader("GSTAccountant", Param);
+            return dr;
+        }
+        
+        public async Task<SqlDataReader> CashDeductionTransferViewAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "CashGoneTransferViewAN");
+            Param.Add("@TransactionCode", obj.TransactionCode);
+            SqlDataReader dr = await DBHelper.ExecuteStoreProcedureReturnDataReader("GSTAccountant", Param);
+            return dr;
+        }
+
+        public async Task<DataSet> BankTransactionHistory(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "BankAccountTransactionHistory");
+            Param.Add("@BankId", obj.BankId.ToString());
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+        public async Task<DataSet> DeleteBankAccountAN(Accountant obj)
+        {
+            Dictionary<string, string> Param = new Dictionary<string, string>();
+            Param.Add("@Flag", "DeleteBankAccountAN");
+            Param.Add("@BankId", obj.BankId.ToString());
+            DataSet ds = await DBHelper.ExecuteStoreProcedureReturnDS("GSTAccountant", Param);
+            return ds;
+        }
+
+        #endregion
     }
 }

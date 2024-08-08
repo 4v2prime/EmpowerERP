@@ -88,8 +88,6 @@ namespace GSTEducationERPLibrary.Accountant
         public double TransactionAmount { get; set; }
         [DisplayName("Balance Amount")]
         public double BalanceAmount { get; set; }
-        [DisplayName("Account Holder Name")]
-        public string BankName { get; set; }
         [DisplayName("Bank Type")]
         public string BankType { get; set; }
         public string Status { get; set; }
@@ -101,6 +99,71 @@ namespace GSTEducationERPLibrary.Accountant
         public List<Accountant> lstTransactionVP = new List<Accountant>();
         #endregion
         //---------------------------vishals properties ends here-----------------------------------------------------------------------------------------------
+
+
+
+        #region Variable Declare -- Cash and Bank -- Ajay Narkhedkar
+
+        [RegularExpression(@"^[A-Za-z][A-Za-z0-9 ]{0,249}$", ErrorMessage = "Bank name must start with a letter and can only contain letters, numbers, and spaces. Maximum length is 250 characters.")]
+        [Required(ErrorMessage = "Bank Name is required.")]
+        public string BankName { get; set; }
+
+
+        [RegularExpression(@"^[A-Za-z ]{1,250}$", ErrorMessage = "Account holder name can only be characters with max 250 characters.")]
+        [Required(ErrorMessage = "Bank Account Holder Name is Requered")]
+        public string AccountHolderName { get; set; }
+
+        [RegularExpression(@"^[0-9]{9,18}$", ErrorMessage = "Bank account number must be numeric with 9-18 digits.")]
+        [Required(ErrorMessage = "Account Number is Requered")]
+        public Int64 BankAccountNumber { get; set; }
+
+        [RegularExpression(@"^[A-Za-z ]{1,250}$", ErrorMessage = "Bank branch can only be characters with max 250 characters.")]
+        [Required(ErrorMessage = "Bank Branch is Requered")]
+        public string BankBranch { get; set; }
+
+        [Range(0, float.MaxValue, ErrorMessage = "Bank amount must be non-negative.")]
+        public float BankAmount { get; set; }
+
+        [Required(ErrorMessage = "Bank Type is Requered")]
+        public string AccountType { get; set; }
+
+        public List<Accountant> lstBankAccounts { get; set; }
+
+        [RegularExpression(@"^[A-Za-z]{4}[A-Za-z0-9]{7}$", ErrorMessage = "IFSC code must start with 4 characters followed by alphanumeric characters.")]
+        [Required(ErrorMessage = "Bank IFSC Code is required.")]
+        public string IFSCCode { get; set; }
+
+
+        [RegularExpression(@"^[0-9]{9}$", ErrorMessage = "MICR code must be numeric with exactly 9 digits.")]
+        [Required(ErrorMessage = "MICR Code is Requered")]
+        public string MICRCode { get; set; }
+
+        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Account Opening Date is Requered")]
+        public DateTime BankAccountOpeningDate { get; set; }
+
+        [Required(ErrorMessage = "Account Opening Balace is Requered")]
+        [Range(0, float.MaxValue, ErrorMessage = "Opening balance must be non-negative.")]
+        public float BankAccountOpeningBalance { get; set; }
+
+        [Required(ErrorMessage = "Account Minimum Balace is Requered")]
+        [Range(0, float.MaxValue, ErrorMessage = "Minimum balance must be non-negative.")]
+        public float BankAccountMinimumBalance { get; set; }
+        public string BankBrach { get; set; }
+        [DataType(DataType.Date)]
+        public DateTime Date { get; set; }
+        public string StudentName { get; set; }
+        public List<Accountant> lstCashList { get; set; }
+        public string FeeCollectionCode { get; set; }
+        public List<Accountant> lstBankTransactions { get; set; }
+        public string StaffName { get; set; }
+        public int TransactionCount { get; set; }
+        public string EmailId { get; set; }
+        public string TransactionType { get; set; }
+        public string Rupees { get; set; }
+        public string ExpenseCategory { get; set; }
+
+        #endregion
 
     }
 }

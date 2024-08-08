@@ -756,13 +756,13 @@
                                     </a>
                                     <ul class="nav nav-treeview">
                                         <li class="nav-item">
-                                            <a href="@Url.Action("ListAllFeedbackForTrainerKKAsync", "Coordinator")" class="nav-link @(Request.Url.AbsolutePath.Contains("/Coordinator/ListAllFeedbackForStudentKKAsync") ? "active" : "")">
+                                            <a href="@Url.Action("BankAccountListAsyncAN", "Accountant")" class="nav-link @(Request.Url.AbsolutePath.Contains("/Accountant/BankAccountListAsyncAN") ? "active" : "")">
                                                 <i class="fas fa-comments nav-icon"></i>
                                                 <p>Bank Account</p>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="@Url.Action("ListAllFeedbackForStudentKKAsync", "Coordinator")" class="nav-link @(Request.Url.AbsolutePath.Contains("/Coordinator/ListAllFeedbackForTrainerKKAsync") ? "active" : "")">
+                                            <a href="@Url.Action("CashTransactionsAsyncAN", "Accountant")" class="nav-link @(Request.Url.AbsolutePath.Contains("/Accountant/CashTransactionsAsyncAN") ? "active" : "")">
                                                 <i class="nav-icon fas fa-comments"></i>
                                                 <p>Cash Details </p>
                                             </a>
